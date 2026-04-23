@@ -1,5 +1,6 @@
 const express = require("express");
 const axios = require("axios");
+const qs = require("querystring");
 const app = express();
 
 app.use(express.json());
@@ -18,9 +19,8 @@ app.post("/webhook", async (req, res) => {
   try {
     const payload = JSON.stringify(req.body);
     console.log("Incoming payload:", payload);
-    await axios.post(ZOHO_FUNCTION_URL, null, {
-      params: { payload: payload },
-      headers: { "Content-Type": "application/json" },
+    await axios.post(ZOHO_FUNCTION_URL, qs.stringify({ payload: payload }), {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
     });
     res.status(200).send("ok");
   } catch (err) {
