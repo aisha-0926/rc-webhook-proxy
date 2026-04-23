@@ -19,9 +19,14 @@ app.post("/webhook", async (req, res) => {
   try {
     const payload = JSON.stringify(req.body);
     console.log("Incoming payload:", payload);
-    await axios.post(ZOHO_FUNCTION_URL, qs.stringify({ payload: payload }), {
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    });
+
+    const arguments_str = JSON.stringify({ payload: payload });
+
+    await axios.post(
+      ZOHO_FUNCTION_URL,
+      { arguments: arguments_str },
+      { headers: { "Content-Type": "application/json" } },
+    );
     res.status(200).send("ok");
   } catch (err) {
     console.error("Error:", err.message);
