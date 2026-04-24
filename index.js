@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 
 const ZOHO_FUNCTION_URL =
-  "https://www.zohoapis.eu/crm/v7/functions/rc_inbound_call_handler/actions/execute?auth_type=apikey&zapikey=1003.b683e26f81a5cf3ff92a874922f0f0a9.9e6083925488901143ce0086708e1d4c";
+  "https://www.zohoapis.eu/crm/v7/functions/rc_inbound_call_handler/actions/execute?auth_type=apikey&zapikey=1003.d89421bc750a3cd74b4231e4e87ddec1.f528c7900108c276fb9f6f88c95f28c7";
 
 app.post("/webhook", async (req, res) => {
   const validationToken = req.headers["validation-token"];
