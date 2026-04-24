@@ -11,17 +11,22 @@ const ZOHO_FUNCTION_URL =
 app.post("/webhook", async (req, res) => {
   const validationToken = req.headers["validation-token"];
   if (validationToken) {
-    console.log("Validation handshake - echoing token");
     res.setHeader("Validation-Token", validationToken);
     return res.status(200).send(validationToken);
+  }
+
+  // Only forward if it's actually a telephony session event with parties
+  const body = req.body;
+  const parties = body?.body?.parties;
+  if (!parties || parties.length === 0) {
+    console.log("No parties in payload - skipping");
+    return res.status(200).send("skipped");
   }
 
   try {
     const payload = JSON.stringify(req.body);
     console.log("Incoming payload:", payload);
-
     const arguments_str = JSON.stringify({ payload: payload });
-
     await axios.post(
       ZOHO_FUNCTION_URL,
       { arguments: arguments_str },
