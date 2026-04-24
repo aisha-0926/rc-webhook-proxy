@@ -1,6 +1,5 @@
 const express = require("express");
 const axios = require("axios");
-const qs = require("querystring");
 const app = express();
 
 app.use(express.json());
@@ -15,7 +14,6 @@ app.post("/webhook", async (req, res) => {
     return res.status(200).send(validationToken);
   }
 
-  // Only forward if it's actually a telephony session event with parties
   const body = req.body;
   const parties = body?.body?.parties;
   if (!parties || parties.length === 0) {
@@ -26,10 +24,13 @@ app.post("/webhook", async (req, res) => {
   try {
     const payload = JSON.stringify(req.body);
     console.log("Incoming payload:", payload);
-    const arguments_str = JSON.stringify({ payload: payload });
+    const url =
+      ZOHO_FUNCTION_URL +
+      "&arguments=" +
+      encodeURIComponent(JSON.stringify({ payload: payload }));
     await axios.post(
-      ZOHO_FUNCTION_URL,
-      { arguments: arguments_str },
+      url,
+      {},
       { headers: { "Content-Type": "application/json" } },
     );
     res.status(200).send("ok");
